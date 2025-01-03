@@ -13,29 +13,42 @@ import (
 func main() {
 
 	target := rand.Intn(100) + 1
-	fmt.Println(target)
+
 	fmt.Println("I've chosen a random number between 1 and 100.")
 	fmt.Print("Can you guess it? ")
 
 	reader := bufio.NewReader(os.Stdin)
-	input, err := reader.ReadString('\n')
+	sucess := false
 
-	if err != nil {
-		log.Fatal(err)
+	for guesses := 0; guesses < 10; guesses++ {
+
+		fmt.Println(10-guesses, "guesses left.")
+		fmt.Print("Your guess: ")
+		input, err := reader.ReadString('\n')
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		guess, err := strconv.Atoi(strings.TrimSpace(input))
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if guess < target {
+			fmt.Println("Oops. Your guess was LOW.")
+		} else if guess > target {
+			fmt.Println("Oops. Your guess was HIGH.")
+		} else {
+			sucess = true
+			fmt.Println("Good job! You guessed it!")
+			break
+		}
 	}
 
-	guess, err := strconv.Atoi(strings.TrimSpace(input))
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if guess < target {
-		fmt.Println("Oops. Your guess was LOW.")
-	} else if guess > target {
-		fmt.Println("Oops. Your guess was HIGH.")
-	} else {
-		fmt.Println("Good job! You guessed it!")
+	if !sucess {
+		fmt.Println("Sorry, you didn't guess the number. It was:", target)
 	}
 
 }
